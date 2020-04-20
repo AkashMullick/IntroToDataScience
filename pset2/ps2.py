@@ -243,7 +243,7 @@ class StandardRobot(Robot):
 
 
 # Uncomment this line to see your implementation of StandardRobot in action!
-testRobotMovement(StandardRobot, RectangularRoom)
+# testRobotMovement(StandardRobot, RectangularRoom)
 
 
 # === Problem 4
@@ -286,7 +286,7 @@ def runSimulation(num_robots, speed, width, height, min_coverage, num_trials,
 
 
 # Uncomment this line to see how much your simulation takes on average
-print(runSimulation(1, 1.0, 10, 10, 0.75, 30, StandardRobot))
+# print(runSimulation(1, 1.0, 10, 10, 0.75, 30, StandardRobot))
 
 
 # === Problem 5
@@ -302,7 +302,13 @@ class RandomWalkRobot(Robot):
         Move the robot to a new position and mark the tile it is on as having
         been cleaned.
         """
-        raise NotImplementedError
+        next_position = self.getRobotPosition().getNewPosition(random.randint(0, 359), self.speed)
+        if self.room.isPositionInRoom(next_position) == False:
+            self.setRobotDirection(random.randint(0, 359))
+        else:
+            self.setRobotPosition(next_position)
+            self.setRobotDirection(random.randint(0, 359))
+            self.room.cleanTileAtPosition(next_position)
 
 
 def showPlot1(title, x_label, y_label):
@@ -354,13 +360,9 @@ def showPlot2(title, x_label, y_label):
 #
 # 1) Write a function call to showPlot1 that generates an appropriately-labeled
 #     plot.
-#
-#       (... your call here ...)
-#
+showPlot1("title", "x_label", "y_label")
 
 #
 # 2) Write a function call to showPlot2 that generates an appropriately-labeled
 #     plot.
-#
-#       (... your call here ...)
-#
+showPlot2("title", "x_label", "y_label")
