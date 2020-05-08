@@ -238,20 +238,24 @@ class ResistantVirus(SimpleVirus):
         the probability of the offspring acquiring or losing resistance to a drug.
         """
 
-        # TODO
+        SimpleVirus.__init__(self, maxBirthProb, clearProb)
+        self.maxBirthProb = maxBirthProb
+        self.clearProb = clearProb
+        self.resistances = resistances
+        self.mutProb = mutProb
 
 
     def getResistances(self):
         """
         Returns the resistances for this virus.
         """
-        # TODO
+        return self.resistances
 
     def getMutProb(self):
         """
         Returns the mutation probability for this virus.
         """
-        # TODO
+        return self.mutProb
 
     def isResistantTo(self, drug):
         """
@@ -265,7 +269,10 @@ class ResistantVirus(SimpleVirus):
         otherwise.
         """
         
-        # TODO
+        try:
+            return self.resistances[drug]
+        except KeyError:
+            return False
 
 
     def reproduce(self, popDensity, activeDrugs):
@@ -313,8 +320,28 @@ class ResistantVirus(SimpleVirus):
         NoChildException if this virus particle does not reproduce.
         """
 
-        # TODO
+        reproduce = True
+        for drug in activeDrugs:
+            if not(self.isResistantTo(drug)):
+                reproduce = False
 
+        if reproduce:
+            if (self.getMaxBirthProb() * (1 - popDensity)) > random.random():
+                childResistances = {}
+                for drug in self.getResistances():
+                    if self.getResistances()[drug] == True:                        
+                        if (1 - self.getMutProb()) > random.random():
+                            childResistances[drug] = True
+                        else:
+                            childResistances[drug] = False
+                    else:
+                        if self.getMutProb() > random.random():
+                            childResistances[drug] = True
+                        else:
+                            childResistances[drug] = False
+                return ResistantVirus(self.getMaxBirthProb(), self.getClearProb(), childResistances, self.getMutProb())
+
+        raise NoChildException
             
 
 class TreatedPatient(Patient):
